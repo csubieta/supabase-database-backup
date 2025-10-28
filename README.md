@@ -1,61 +1,62 @@
-# Supabase Database Backup with GitHub Actions
+# Backup do Banco de Dados Supabase com GitHub Actions
 
-This repository provides a seamless way to automate backups of your Supabase database using GitHub Actions. It creates daily backups of your database’s roles, schema, and data, and stores them in your repository. It also includes a mechanism to easily restore your database in case something goes wrong.
-
----
-
-## Features
-
-- **Automatic Daily Backups:** Scheduled backups run every day at midnight.
-- **Role, Schema, and Data Separation:** Creates modular backup files for roles, schema, and data.
-- **Flexible Workflow Control:** Enable or disable backups with a simple environment variable.
-- **GitHub Action Integration:** Leverages free and reliable GitHub Actions for automation.
-- **Easy Database Restoration:** Clear steps to restore your database from backups.
+Este repositório fornece uma maneira simples e automatizada de criar backups do seu banco de dados Supabase usando o GitHub Actions. Ele cria backups diários dos papéis (roles), esquema (schema) e dados do banco de dados, armazenando-os no seu repositório. Também inclui um mecanismo para restaurar facilmente o banco de dados caso algo dê errado.
 
 ---
 
-## Getting Started
+## Funcionalidades
 
-### 1. **Setup Repository Variables**
+- **Backups Diários Automáticos:** Backups agendados são executados todos os dias à meia-noite.
+- **Separação de Papéis, Esquema e Dados:** Cria arquivos de backup modulares para papéis, esquema e dados.
+- **Controle Flexível do Workflow:** Permite ativar ou desativar os backups com uma simples variável de ambiente.
+- **Integração com GitHub Action:** Utiliza o GitHub Actions, gratuito e confiável, para automação.
+- **Restauração Fácil do Banco de Dados:** Instruções claras para restaurar o banco de dados a partir dos backups.
 
-Go to your repository settings and navigate to **Actions > Variables**. Add the following:
+---
+
+## Primeiros Passos
+
+### 1. **Configurar Variáveis do Repositório**
+
+Vá até as configurações do seu repositório e navegue até **Actions > Variables**.  
+Adicione o seguinte:
 
 - **Secrets:**
 
-  - `SUPABASE_DB_URL`: Your Supabase PostgreSQL connection string. Format:  
-    `postgresql://<USER>:<PASSWORD>@<HOST>:5432/postgres`
+  - `SUPABASE_DB_URL`: Sua string de conexão PostgreSQL do Supabase. Formato:  
+    `postgresql://<USUÁRIO>:<SENHA>@<HOST>:5432/postgres`
 
-- **Variables:**
-  - `BACKUP_ENABLED`: Set to `true` to enable backups or `false` to disable them.
-
----
-
-### 2. **How the Workflow Works**
-
-The GitHub Actions workflow is triggered on:
-
-- Pushes or pull requests to the `main` or `dev` branches.
-- Manual dispatch via the GitHub interface.
-- A daily schedule at midnight.
-
-The workflow performs the following steps:
-
-1. Checks if backups are enabled using the `BACKUP_ENABLED` variable.
-2. Runs the Supabase CLI to create three backup files:
-   - `roles.sql`: Contains roles and permissions.
-   - `schema.sql`: Contains the database structure.
-   - `data.sql`: Contains table data.
-3. Commits the backups to the repository using an auto-commit action.
+- **Variáveis:**
+  - `BACKUP_ENABLED`: Defina como `true` para habilitar os backups ou `false` para desativá-los.
 
 ---
 
-### 3. **Restoring Your Database**
+### 2. **Como o Workflow Funciona**
 
-To restore your database:
+O workflow do GitHub Actions é acionado em:
 
-1. Install the [Supabase CLI](https://supabase.com/docs/guides/cli).
-2. Open a terminal and navigate to the folder containing your backup files.
-3. Run the following commands in order:
+- Pushes ou pull requests para as branches `main` ou `dev`.
+- Execução manual via interface do GitHub.
+- Agendamento diário à meia-noite.
+
+O workflow executa as seguintes etapas:
+
+1. Verifica se os backups estão habilitados usando a variável `BACKUP_ENABLED`.
+2. Executa o Supabase CLI para criar três arquivos de backup:
+   - `roles.sql`: Contém papéis e permissões.
+   - `schema.sql`: Contém a estrutura do banco de dados.
+   - `data.sql`: Contém os dados das tabelas.
+3. Faz o commit dos backups no repositório usando uma ação de auto-commit.
+
+---
+
+### 3. **Restaurando Seu Banco de Dados**
+
+Para restaurar seu banco de dados:
+
+1. Instale o [Supabase CLI](https://supabase.com/docs/guides/cli).
+2. Abra um terminal e navegue até a pasta que contém seus arquivos de backup.
+3. Execute os seguintes comandos na ordem:
 
 ```bash
 supabase db execute --db-url "<SUPABASE_DB_URL>" -f roles.sql
@@ -63,24 +64,35 @@ supabase db execute --db-url "<SUPABASE_DB_URL>" -f schema.sql
 supabase db execute --db-url "<SUPABASE_DB_URL>" -f data.sql
 ```
 
-This restores roles, schema, and data, bringing your database back to its backed-up state.
-Workflow Toggle
+Isso restaura os papéis, o esquema e os dados, retornando o banco de dados ao estado salvo no backup.
 
-Use the BACKUP_ENABLED variable to control whether backups are executed:
+---
 
-    Set to true to enable backups.
-    Set to false to skip backups without editing the workflow file.
+### Alternância do Workflow
 
-## Requirements
+Use a variável `BACKUP_ENABLED` para controlar se os backups serão executados:
 
-    A Supabase project with a PostgreSQL database.
-    Supabase CLI installed for manual restoration.
-    A GitHub repository with Actions enabled.
+- Defina como `true` para habilitar os backups.  
+- Defina como `false` para pular os backups sem precisar editar o arquivo do workflow.
 
-## Contributing
+---
 
-Contributions are welcome! If you have improvements or fixes, feel free to submit a pull request.
+## Requisitos
 
-## License
+- Um projeto Supabase com banco de dados PostgreSQL.  
+- Supabase CLI instalado para restauração manual.  
+- Um repositório GitHub com Actions habilitado.
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+---
+
+## Contribuindo
+
+Contribuições são bem-vindas!  
+Se você tiver melhorias ou correções, sinta-se à vontade para enviar um *pull request*.
+
+---
+
+## Licença
+
+Este projeto está licenciado sob a Licença MIT.  
+Consulte o arquivo LICENSE para mais detalhes.
